@@ -68,19 +68,5 @@ df_oil.reset_index(inplace=True, drop=False)
 df_data = pd.merge(left=df_oil, right=df_rigs, left_on="quote_yearmonth", right_on="which_yearmonth")
 df_data.drop(columns=["which_yearmonth"], inplace=True)
 
-list1 = ["a", "b"]
-list2 = [12, 444]
-
-zipped = zip(list1, list2)
-# r1, r2 = zipped
-r1, r2 = zip(*zipped)
-
-import numpy as np
-ar1 = np.arange(1, 2*3*4+1)
-ar2 = ar1.reshape((2,3,4))
-print(ar2.shape)
-
-np.transpose(ar2, axes=(0, 2, 1))
-np.transpose(ar2, axes=(1, 0, 2))
 
 
