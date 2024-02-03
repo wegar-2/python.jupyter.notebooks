@@ -7,7 +7,7 @@ from src.var_type import VarType
 class DatasetsGenerator:
 
     @classmethod
-    def get_generic_regression_dataset(cls, only_continuous_indep: bool = True):
+    def get_generic_regression_dataset(cls, only_continuous_indep: bool = True) -> tuple[pd.DataFrame, pd.DataFrame]:
         indep_vars = [Var(var_type=VarType.CONTINUOUS)] * 5
         if not only_continuous_indep:
             indep_vars += [Var(var_type=VarType.BINARY), Var(var_type=VarType.MULTICLASS, num_of_levels=5)]
@@ -19,7 +19,9 @@ class DatasetsGenerator:
         )
 
     @classmethod
-    def get_generic_binary_classification_dataset(cls, only_continuous_indep: bool = True):
+    def get_generic_binary_classification_dataset(
+            cls, only_continuous_indep: bool = True
+    ) -> tuple[pd.DataFrame, pd.DataFrame]:
         indep_vars = [Var(var_type=VarType.CONTINUOUS)] * 5
         if not only_continuous_indep:
             indep_vars += [Var(var_type=VarType.BINARY), Var(var_type=VarType.MULTICLASS, num_of_levels=5)]
@@ -37,7 +39,7 @@ class DatasetsGenerator:
             indep_vars: Var | list[Var],
             rows_num: int = 1_000,
             seed: int = 12345
-    ) -> pd.DataFrame:
+    ) -> tuple[pd.DataFrame, pd.DataFrame]:
         if isinstance(dep_vars, Var):
             dep_vars = [dep_vars]
         if isinstance(indep_vars, Var):
@@ -47,7 +49,7 @@ class DatasetsGenerator:
         indep_df = cls._get_noise_data(variabs=indep_vars, rows_num=rows_num)
         dep_df.columns = [f"Y_{k}" for k in range(1, dep_df.shape[1] + 1, 1)]
         indep_df.columns = [f"X_{k}" for k in range(1, indep_df.shape[1] + 1, 1)]
-        return pd.concat([dep_df, indep_df], axis=1)
+        return indep_df, dep_df
 
     @classmethod
     def _get_noise_data(cls, variabs: list[Var], rows_num: int) -> pd.DataFrame:
