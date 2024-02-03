@@ -7,4 +7,5 @@ class Var(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     var_type: VarType
-    num_of_levels: Optional[PositiveInt]
+    num_of_levels: Optional[PositiveInt] = None
+

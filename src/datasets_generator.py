@@ -6,8 +6,9 @@ from src.var_type import VarType
 
 class DatasetsGenerator:
 
+    @classmethod
     def get_noise_dataset(
-            self,
+            cls,
             dep_vars: Var | list[Var],
             indep_vars: Var | list[Var],
             rows_num: int = 1_000,
@@ -18,15 +19,16 @@ class DatasetsGenerator:
         if isinstance(indep_vars, Var):
             indep_vars = [indep_vars]
         np.random.seed(seed)
-        dep_df = self._get_noise_data()
-        indep_df = self._get_noise()
-        dep_df.columns = [f"Y_{k}" for k in range(1, dep_df.shape[1], 1)]
-        dep_df.columns = [f"X_{k}" for k in range(1, indep_df.shape[1], 1)]
-        return pd.concat([indep_vars, dep_vars], axis=0)
+        dep_df = cls._get_noise_data(variabs=dep_vars, rows_num=rows_num)
+        indep_df = cls._get_noise_data(variabs=indep_vars, rows_num=rows_num)
+        dep_df.columns = [f"Y_{k}" for k in range(1, dep_df.shape[1] + 1, 1)]
+        indep_df.columns = [f"X_{k}" for k in range(1, indep_df.shape[1] + 1, 1)]
+        return pd.concat([dep_df, indep_df], axis=1)
 
-    @staticmethod
-    def _get_noise_data(vars: list[Var], rows_num: int) -> pd.DataFrame:
-        pass
+    @classmethod
+    def _get_noise_data(cls, variabs: list[Var], rows_num: int) -> pd.DataFrame:
+        return pd.DataFrame(
+            data=np.concatenate([cls._get_noise(var=var, rows_num=rows_num).reshape(-1, 1) for var in variabs], axis=1))
 
     @staticmethod
     def _get_noise(var: Var, rows_num: int) -> np.array:
