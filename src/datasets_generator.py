@@ -8,15 +8,27 @@ class DatasetsGenerator:
 
     @classmethod
     def get_generic_regression_dataset(cls, only_continuous_indep: bool = True):
-        dep_vars = [Var(var_type=VarType.CONTINUOUS)] * 2
         indep_vars = [Var(var_type=VarType.CONTINUOUS)] * 5
         if not only_continuous_indep:
-            indep_vars += [Var(var_type=VarType.BINARY)]
-        return DatasetsGenerator.get_noise_dataset(dep_vars=dep_vars, indep_vars=indep_vars, rows_num=2_000, seed=321)
+            indep_vars += [Var(var_type=VarType.BINARY), Var(var_type=VarType.MULTICLASS, num_of_levels=5)]
+        return DatasetsGenerator.get_noise_dataset(
+            dep_vars=Var(var_type=VarType.CONTINUOUS),
+            indep_vars=indep_vars,
+            rows_num=2_000,
+            seed=321
+        )
 
     @classmethod
-    def get_generic_classification_dataset(cls, only_continuous_dep: bool = True):
-        pass
+    def get_generic_binary_classification_dataset(cls, only_continuous_indep: bool = True):
+        indep_vars = [Var(var_type=VarType.CONTINUOUS)] * 5
+        if not only_continuous_indep:
+            indep_vars += [Var(var_type=VarType.BINARY), Var(var_type=VarType.MULTICLASS, num_of_levels=5)]
+        return DatasetsGenerator.get_noise_dataset(
+            dep_vars=Var(var_type=VarType.BINARY),
+            indep_vars=indep_vars,
+            rows_num=2_000,
+            seed=321
+        )
 
     @classmethod
     def get_noise_dataset(
@@ -47,4 +59,4 @@ class DatasetsGenerator:
         if var.var_type == VarType.CONTINUOUS:
             return np.random.randn(rows_num)
         else:
-            return np.random.randint(1, var.num_of_levels, size=rows_num)
+            return np.random.randint(1, var.num_of_levels + 1, size=rows_num)
