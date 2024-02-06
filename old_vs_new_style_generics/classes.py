@@ -3,7 +3,7 @@ from typing import TypeVar, Generic
 T = TypeVar("T")
 
 
-class OldStyle(Generic[T]):
+class OldGenericClass(Generic[T]):
 
     def __init__(self, x: T):
         self._x: T = x
@@ -11,8 +11,11 @@ class OldStyle(Generic[T]):
     def get(self) -> T:
         return self._x
 
+    def set(self, x: T):
+        self._x = x
 
-class NewStyle[N]: # noqa
+
+class NewGenericClass[N]: # noqa
 
     def __init__(self, x: N):
         self._x: N = x
@@ -20,11 +23,18 @@ class NewStyle[N]: # noqa
     def get(self) -> N:
         return self._x
 
+    def set(self, x: N):
+        self._x = x
+
 
 if __name__ == "__main__":
 
-    os_obj = OldStyle(x="asdf")
-    print(os_obj.get())
+    old_obj = OldGenericClass(x=123)
+    print(old_obj.get())
+    old_obj.set(x=324)
+    print(old_obj.get())
 
-    ns_obj = NewStyle(x="qweryty")
-    print(ns_obj.get())
+    new_obj = NewGenericClass(x=980)
+    print(new_obj.get())
+    new_obj.set(x=2221)
+    print(new_obj.get())
