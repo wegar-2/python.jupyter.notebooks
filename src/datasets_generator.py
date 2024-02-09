@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from src.var import Var
 from src.var_type import VarType
+from sklearn.datasets import make_regression
 
 
 class DatasetsGenerator:
@@ -62,3 +63,22 @@ class DatasetsGenerator:
             return np.random.randn(rows_num)
         else:
             return np.random.randint(1, var.num_of_levels + 1, size=rows_num)
+
+    @classmethod
+    def get_linear_regression_dataset(
+            cls,
+            rows_num: int,
+            regressors_num: int,
+            informative_regressors_num: int,
+            bias: float,
+            sigma: float = 10,
+            seed: int = 123456
+    ) -> tuple[pd.DataFrame, pd.DataFrame, np.array]:
+        X, y, coeffs_array = make_regression(
+            n_samples=rows_num, n_features=regressors_num, n_informative=informative_regressors_num,
+            n_targets=1, bias=bias, random_state=seed, coef=True, noise=sigma
+        )
+        y = y.reshape(-1, 1)
+        X_df = pd.DataFrame(data=X, columns=[f"X_{k}" for k in range(1, regressors_num + 1, 1)])
+        y_df = pd.DataFrame(data=y, columns=["y"])
+        return X_df, y_df, coeffs_array
