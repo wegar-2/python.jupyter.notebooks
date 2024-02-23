@@ -8,10 +8,16 @@ from sklearn.datasets import make_regression
 class DatasetsGenerator:
 
     @classmethod
-    def get_generic_regression_dataset(cls, only_continuous_indep: bool = True) -> tuple[pd.DataFrame, pd.DataFrame]:
+    def get_generic_regression_dataset(
+            cls,
+            only_continuous_indep: bool = True
+    ) -> tuple[pd.DataFrame, pd.DataFrame]:
         indep_vars = [Var(var_type=VarType.CONTINUOUS)] * 5
         if not only_continuous_indep:
-            indep_vars += [Var(var_type=VarType.BINARY), Var(var_type=VarType.MULTICLASS, num_of_levels=5)]
+            indep_vars += [
+                Var(var_type=VarType.BINARY),
+                Var(var_type=VarType.MULTICLASS, num_of_levels=5)
+            ]
         return DatasetsGenerator.get_noise_dataset(
             dep_vars=Var(var_type=VarType.CONTINUOUS),
             indep_vars=indep_vars,
@@ -75,8 +81,14 @@ class DatasetsGenerator:
             seed: int = 123456
     ) -> tuple[pd.DataFrame, pd.DataFrame, np.array]:
         X, y, coeffs_array = make_regression(
-            n_samples=rows_num, n_features=regressors_num, n_informative=informative_regressors_num,
-            n_targets=1, bias=bias, random_state=seed, coef=True, noise=sigma
+            n_samples=rows_num,
+            n_features=regressors_num,
+            n_informative=informative_regressors_num,
+            n_targets=1,
+            bias=bias,
+            random_state=seed,
+            coef=True,
+            noise=sigma
         )
         y = y.reshape(-1, 1)
         X_df = pd.DataFrame(data=X, columns=[f"X_{k}" for k in range(1, regressors_num + 1, 1)])
