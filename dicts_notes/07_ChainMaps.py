@@ -22,3 +22,12 @@ if __name__ == "__main__":
     cc = c.new_child({"a": 1})
     print(f"{c=}")
     print(f"{cc=}")
+
+    # behavior of ChainMap for ties
+    cm0 = ChainMap()
+    cm0 = cm0.new_child({"a": 43, "b": 9803})
+    cm0 = cm0.new_child({"b": 909, "g": 76})
+    print(cm0)
+    print(cm0["b"]) # note that the later child's value is printed
+    cm0.update({"l": 123})
+    print(cm0)
